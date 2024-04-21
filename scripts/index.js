@@ -5,7 +5,6 @@ const cardTemplate = document.querySelector("#card-template").content;
 const placesList = document.querySelector(".places__list");
 const placesItemCard = document.querySelector(".places__item card");
 const profileAddButton = document.querySelector(".profile__add-button");
-const cardDeleteButton = cardTemplate.querySelector(".card__delete-button");
 
 // @todo: Функция создания карточки
 function renderCard(name, link, deleteCard) {
