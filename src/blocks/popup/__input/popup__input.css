@@ -20,3 +20,20 @@
     line-height: 15px;
   }
 }
+
+.popup__input_type_error {
+  border-bottom: 1px solid red;
+}
+
+.popup__error_visible {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
+  color: red;
+  display: flex;
+}
+
+.error_active {
+  display: block;
+}
