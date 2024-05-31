@@ -13,7 +13,7 @@ export function closeModal(el) {
 }
 
 //Функция закрытия окна по клавише Escape
-export function closeModalEsc(evt) {
+function closeModalEsc(evt) {
   if (evt.key === 'Escape') {
     const popupOpened = document.querySelector('.popup_is-opened');
     closeModal(popupOpened);

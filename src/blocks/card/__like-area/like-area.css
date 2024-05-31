@@ -1,0 +1,7 @@
+.like-area {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  justify-content: center;
+  align-items: center;
+}
