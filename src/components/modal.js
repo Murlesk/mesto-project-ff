@@ -1,5 +1,3 @@
-import { clearForm } from './validation';
-
 //Функция отрытия окна
 export function openModal(el) {
   el.classList.add('popup_is-opened');

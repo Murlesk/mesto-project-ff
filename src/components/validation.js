@@ -96,7 +96,7 @@ const clearValidation = (formElement, enableValidation) => {
     enableValidation.submitButtonSelector
   );
   const inputList = Array.from(
-    querySelectorAll(enableValidation.inputSelector)
+    formElement.querySelectorAll(enableValidation.inputSelector)
   );
   inputList.forEach((inputElement) => {
     hideInputError(formElement, inputElement, enableValidation);
