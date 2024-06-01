@@ -1,4 +1,3 @@
-import { profileId } from '../index.js';
 import { dislikeCard, addLikeCard } from './api.js';
 
 const cardTemplate = document.querySelector('#card-template').content; //Темплейт карточки
@@ -15,12 +14,12 @@ function renderCard(
   const deleteButton = cardElement.querySelector('.card__delete-button');
   const likeButton = cardElement.querySelector('.card__like-button');
   const cardImg = cardElement.querySelector('.card__image');
-  const likes = cardElement.querySelector('.likes');
+  const likeBlock = cardElement.querySelector('.likes');
 
   cardElement.querySelector('.card__title').textContent = cardData.name;
   cardElement.querySelector('.card__image').alt = cardData.name;
   cardElement.querySelector('.card__image').src = cardData.link;
-  likes.textContent = cardData.likes.length;
+  likeBlock.textContent = cardData.likes.length;
   cardElement.id = cardData['_id'];
   if (profileId !== cardData.owner['_id']) {
     deleteButton.remove();
@@ -37,7 +36,7 @@ function renderCard(
   }
 
   likeButton.addEventListener('click', () => {
-    likeCard(cardData, cardElement);
+    likeCard(cardData, likeButton, likeBlock);
   })
 
   cardImg.addEventListener('click', handleImageClick);
@@ -45,12 +44,9 @@ function renderCard(
   return cardElement;
 }
 
-function likeCard(cardData, cardItem) {
-  const likeButton = cardItem.querySelector('.card__like-button');
-  const likeBlock = cardItem.querySelector('.likes');
+function likeCard(cardData, likeButton, likeBlock) {
   const isLiked = likeButton.classList.contains('card__like-button_is-active');
   const likeMethod = isLiked ? dislikeCard : addLikeCard;
-  console.log(likeMethod);
   likeMethod(cardData._id)
     .then((res) => {
       likeBlock.textContent = res.likes.length;

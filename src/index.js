@@ -2,7 +2,6 @@ import "./pages/index.css"; //Главый файл стилей
 import { renderCard, likeCard } from "./components/card.js"; //Сборка карточки
 import { openModal, closeModal } from "./components/modal.js"; //Модальные действия
 import { validation, clearValidation } from "./components/validation.js"; //Проверка валидации форм
-import { enableValidation } from "./components/validation.js";
 import {
   getUserData,
   getCards,
@@ -11,6 +10,15 @@ import {
   postCard,
   replaceAvatar,
 } from "./components/api.js";
+
+export const enableValidation = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
 
 const popups = document.querySelectorAll(".popup"); //ПопАпы
 const placesList = document.querySelector(".places__list"); //Список карточек
@@ -21,6 +29,7 @@ const imgPopup = document.querySelector(".popup_type_image"); //Попап пр�
 const imgPicture = document.querySelector(".popup__image"); //Картинка попапа места
 const imgCaption = document.querySelector(".popup__caption"); //Описание попапа места
 const profileSubmitButton = document.querySelector(".popup__button"); //Кнопка отправки формы
+const buttonText = profileSubmitButton.textContent;
 
 const profileEditButton = document.querySelector(".profile__edit-button"); //Кнопка редактирования профиля
 const formEditProfile = document.forms["edit-profile"]; //Форма редактирования профиля
@@ -31,7 +40,7 @@ const actualDesc = document.querySelector(".profile__description"); //Текущ
 const profileAvatar = document.querySelector(".profile__image");
 const profileButton = formEditProfile.querySelector(".popup__button");
 const formProfileEdit = document.querySelector(".popup_type_edit"); //Попап редактирования профиля
-export let profileId = "";
+let profileId = "";
 
 const avatarReplacePopup = document.querySelector(".popup_type_edit_avatar");
 const formAvatarReplace = document.querySelector(
@@ -43,26 +52,29 @@ const avatarLinkInput = formAvatarReplace.querySelector(
 
 const formAddPlace = document.forms["new-place"]; //Форма добавления места
 const placeName = formAddPlace.elements["place-name"]; //Поле для ввода названия нового места
+const formAddPLaceButton = formAddPlace.querySelector(".popup__button");
 const placeLink = formAddPlace.elements.link; //Поле для ввода ссылки нового места
 
 //Загрузка карточек с сервера
-Promise.all([getCards(), getUserData()]).then(([cardData, profileData]) => {
-  profileId = profileData._id;
-  actualName.textContent = profileData.name;
-  actualDesc.textContent = profileData.about;
-  profileAvatar.style.backgroundImage = `url(\\${profileData.avatar})`;
-  cardData.forEach((card) => {
-    placesList.append(
-      renderCard(card, handleImageClick, likeCard, deleteCard, profileId)
-    );
-  });
-});
+Promise.all([getCards(), getUserData()])
+  .then(([cardData, profileData]) => {
+    profileId = profileData._id;
+    actualName.textContent = profileData.name;
+    actualDesc.textContent = profileData.about;
+    profileAvatar.style.backgroundImage = `url(\\${profileData.avatar})`;
+    cardData.forEach((card) => {
+      placesList.append(
+        renderCard(card, handleImageClick, likeCard, deleteCard, profileId)
+      );
+    });
+  })
+  .catch((err) => console.log(err));
 
 //Обновление информации профиля
 function formProfileSubmit(evt) {
   evt.preventDefault();
-  const buttonText = profileSubmitButton.textContent;
-  profileSubmitButton.textContent = "Сохранение..";
+
+  profileButton.textContent = "Сохранение..";
   patchUserProfile(nameInput.value, descInput.value)
     .then((profileData) => {
       actualName.textContent = profileData.name;
@@ -71,8 +83,8 @@ function formProfileSubmit(evt) {
     .catch((error) =>
       console.log("Не удалось обновить данные профиля: ", error)
     )
-    .finally(() => (profileSubmitButton.textContent = buttonText));
-  closeModal(formProfileEdit);
+    .finally(() => (profileSubmitButton.textContent = buttonText), closeModal(formProfileEdit))
+    .catch((err) => console.log(err));
 }
 
 //Удаление карточки
@@ -107,19 +119,16 @@ popups.forEach(function (item) {
 
 //Функция просмотра картинки
 function handleImageClick(evt) {
-  if (evt.target.classList.contains("card__image")) {
-    openModal(imgPopup);
-    imgPicture.src = evt.target.src;
-    imgPicture.alt = evt.target.alt;
-    imgCaption.textContent = evt.target.alt;
-  }
+  openModal(imgPopup);
+  imgPicture.src = evt.target.src;
+  imgPicture.alt = evt.target.alt;
+  imgCaption.textContent = evt.target.alt;
 }
 
 //Функция создания карточки через форму
 function addPlace(evt) {
   evt.preventDefault();
-  const buttonText = profileSubmitButton.textContent;
-  profileSubmitButton.textContent = "Сохранение..";
+  formAddPLaceButton.textContent = "Сохранение..";
   postCard(placeName.value, placeLink.value)
     .then((card) => {
       const newPlace = renderCard(
@@ -140,8 +149,6 @@ function addPlace(evt) {
 //Функция смены аватарки
 function changeAvatar(evt) {
   evt.preventDefault();
-
-  const buttonText = profileSubmitButton.textContent;
   profileSubmitButton.textContent = "Сохранение..";
   replaceAvatar(avatarLinkInput.value)
     .then((profileData) => {
