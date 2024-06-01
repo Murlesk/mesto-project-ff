@@ -7,9 +7,7 @@
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
-  background-image: url('../../../images/avatar.jpg');
-
-  }
+}
 
 @media screen and (max-width: 740px) {
   .profile__image {
@@ -21,4 +19,22 @@
   .profile__image {
     margin-right: 0;
   }
+}
+
+.profile__image::after {
+  display: block;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-image: url(../../../images/avatar-hover.svg);
+  content: "";
+  cursor: pointer;
+  block-size: 120px;
+  background-repeat: no-repeat;
+  background-position: center;
+  inline-size: 120px; 
+  opacity: 0;
+}
+
+.profile__image:hover::after {
+  opacity: 1;
+  transition: 0.3s;
 }

@@ -33,6 +33,10 @@ const profileAvatar = document.querySelector('.profile__image');
 const formProfileEdit = document.querySelector('.popup_type_edit'); //Попап редактирования профиля
 export let profileId = '';
 
+const avatarReplacePopup = document.querySelector('.popup_type_replace_avatar');
+const formAvatarReplace = document.querySelector('.popup__form[name="avatar-replace"]');
+const avatarLinkInput = formAvatarReplace.querySelector('.popup__input_type_url');
+
 const formAddPlace = document.forms['new-place']; //Форма добавления места
 const placeName = formAddPlace.elements['place-name']; //Поле для ввода названия нового места
 const placeLink = formAddPlace.elements.link; //Поле для ввода ссылки нового места
@@ -118,8 +122,29 @@ function addPlace(evt) {
       .finally(() => (profileSubmitButton.textContent = buttonText));
 }
 
+//Функция смены аватарки
+function changeAvatar(evt) {
+  evt.preventDefault();
+  const buttonText = profileSubmitButton.textContent;
+    profileSubmitButton.textContent = 'Сохранение..';
+    replaceAvatar(avatarLinkInput.value)
+    .then((profileData) => {
+      profileAvatar.style.backgroundImage = `url(\\${[profileData.avatar]})`;
+      closeModal(avatarReplacePopup);
+    })
+    .catch((error) => console.log('Не удалось загрузить аватар: ', error))
+    .finally(() => (profileSubmitButton.textContent = buttonText));
+}
+
+profileAvatar.addEventListener('click', () => {
+  avatarLinkInput.value = profileAvatar.style.backgroundImage.replace(/url\(["']?(.*?)["']?\)/,"$1");
+  openModal(avatarReplacePopup);
+
+})
+
 //Редактирование данных профиля
 formEditProfile.addEventListener('submit', formProfileSubmit);
+formAvatarReplace.addEventListener('submit', changeAvatar);
 
 //Добавление локации
 formAddPlace.addEventListener('submit', addPlace);
