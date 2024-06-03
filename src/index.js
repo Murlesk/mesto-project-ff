@@ -84,7 +84,7 @@ function formProfileSubmit(evt) {
     .catch((error) =>
       console.log("Не удалось обновить данные профиля: ", error)
     )
-    .finally(() => (profileSubmitButton.textContent = buttonText))
+    .finally(() => (profileButton.textContent = buttonText))
     .catch((err) => console.log(err));
 }
 
