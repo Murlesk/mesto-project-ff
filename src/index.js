@@ -11,7 +11,7 @@ import {
   replaceAvatar,
 } from "./components/api.js";
 
-export const enableValidation = {
+const enableValidation = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
   submitButtonSelector: ".popup__button",
@@ -79,11 +79,12 @@ function formProfileSubmit(evt) {
     .then((profileData) => {
       actualName.textContent = profileData.name;
       actualDesc.textContent = profileData.about;
+      closeModal(formProfileEdit);
     })
     .catch((error) =>
       console.log("Не удалось обновить данные профиля: ", error)
     )
-    .finally(() => (profileSubmitButton.textContent = buttonText), closeModal(formProfileEdit))
+    .finally(() => (profileSubmitButton.textContent = buttonText))
     .catch((err) => console.log(err));
 }
 

@@ -1,4 +1,4 @@
-import { enableValidation } from "../index.js";
+
 
 //Функция показа ошибки
 const showInputError = (
@@ -100,4 +100,4 @@ const clearValidation = (formElement, enableValidation) => {
 
 
 
-export { validation, enableValidation, clearValidation};
+export { validation, clearValidation};
